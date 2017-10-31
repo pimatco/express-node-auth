@@ -17,6 +17,12 @@ router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Registration' });
 });
 
+router.get('/profile', authenticationMiddleware(), function (req, res) {
+
+	res.render('profile', {title: "Profile"});
+	
+});
+
 
 router.get('/login', function(req, res, next) {
 	res.render('login', { title: 'Login' });
@@ -71,6 +77,14 @@ passport.deserializeUser(function(user_id, done) {
 	  done(null, user_id);
   });
 
+	function authenticationMiddleware () {  
+		return (req, res, next) => {
+			console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
+	
+				if (req.isAuthenticated()) return next();
+				res.redirect('/login')
+		}
+	}
 
 module.exports = router;
 

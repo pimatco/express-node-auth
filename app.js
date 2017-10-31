@@ -10,7 +10,7 @@ var expressValidator = require('express-validator');
 
 var session = require('express-session');
 var passport = require('passport');
-
+var MySQLStore = require('express-mysql-session')(session);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
@@ -31,10 +31,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var options = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database : process.env.DB_NAME,
+  //remember to add path. if using xampp, nothing inside.
+  socketPath: ""
+};
+
+var sessionStore = new MySQLStore(options);
 //session
 app.use(session({
   secret: 'mvkfooahjfenociddi',
   resave: false,
+  store: sessionStore,
   saveUninitialized: false,
  // cookie: { secure: true }
 }))
