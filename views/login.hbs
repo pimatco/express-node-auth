@@ -1,0 +1,16 @@
+{{> header }}
+ <link rel="stylesheet" type="text/css" href="css/style.css">
+      <h1>{{title}}</h1><br>
+<div class="container">
+<div class="login-page">
+  <div class="form">
+    <form class="login-form" method="POST" action="/login">
+      <input type="text" placeholder="username" name="username"/>
+      <input type="password" placeholder="password" name="password"/>
+      <button>login</button>
+      <p class="message">Não registrou? <a href="/register">Crie uma conta</a></p>
+    </form>
+  </div>
+</div>
+</div>
+{{> footer-end }}

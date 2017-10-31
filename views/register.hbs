@@ -1,26 +1,43 @@
 {{> header }}
+ <link rel="stylesheet" type="text/css" href="css/style.css">
 
-<h1>{{title}}</h1>
+
 
 <div class="container">
-<form method="POST" action="/register">
-  <div class="form-group">
-    <label for="username">Nome de usuário</label>
-    <input type="text" class="form-control" name="username" placeholder="Username">
+  <div class="login-page">
+    <div class="container">
+      {{#if errors}}
+        {{#each errors}}
+          <div class="alert alert-danger" role="alert">
+            {{this.msg}}
+          </div>
+        {{/each}} 
+      {{/if}}
+    </div>
+    <div class="form">
+      <h1>{{title}}</h1><br>
+      <form method="POST" action="/register" class="register-form">
+        <div class="form-group">
+          <label for="username">Nome de usuário</label>
+          <input type="text" class="form-control" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="passwordMatch">Confirme a Senha</label>
+          <input type="password" class="form-control" id="passwordMatch" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+            <p class="message">Já registrado? <a href="/login">Faça login</a></p>
+      </form>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" class="form-control" name="email" placeholder="Enter email">
-  </div>
-  <div class="form-group">
-    <label for="password">Senha</label>
-    <input type="password" class="form-control" name="password" placeholder="Password">
-  </div>
-  <div class="form-group">
-    <label for="passwordMatch">Confirme a Senha</label>
-    <input type="password" class="form-control" id="passwordMatch" placeholder="Password">
-  </div>
-  <button type="submit" class="btn btn-primary btn-block">Registrar</button>
-</form>
 </div>
+
 {{> footer-end }}
