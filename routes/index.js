@@ -1,12 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var expressValidator = require('express-validator');
-
+var bcrypt = require('bcrypt');
+var passport = require('passport')
+const saltRounds = 10;
 /* GET home page. */
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Registration' });
 });
 
+router.get('/', function(req,res){
+	res.render('home', {title:'Home'});
+});
+
+router.get('/login', function(req, res, next) {
+	res.render('login', { title: 'Login' });
+  });
 
 
 /* GET hregister page. */
@@ -36,18 +45,36 @@ router.post('/register', function(req, res, next) {
  
 		const a = req.body.username;
 		const b = req.body.email;
-		const c =req.body.password;
+		const c = req.body.password;
 		const db=require('../db.js');
-		db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [a, b, c],function(error, results, fields){
-			console.log("Enviado para o banco" + a + b + c);
-			if(error) throw error;
-			res.render('register', { title: 'Registration Complete' });
-		})
+		bcrypt.hash(c, saltRounds, function(err, h) {
+			db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [a, b, h],function(error, results, fields){
+				console.log("Enviado para o banco" + a + b + c);
+				if(error) throw error;
+				db.query('SELECT LAST_INSERT_ID() as user_id', function (error, results, fields){
+					const user_id = results[0];
+					if(error) throw error;
+					req.login(user_id, function(err){
+						res.redirect('/');
+					});
+				});
+				
+			})
+		  });
+		
 
 	 }
 	
 	
 });
+
+passport.serializeUser(function(user_id, done) {	
+	done(null, user_id);
+  });
+  
+passport.deserializeUser(function(user_id, done) {
+	  done(null, user_id);
+  });
 
 
 module.exports = router;

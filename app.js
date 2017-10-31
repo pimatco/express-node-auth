@@ -6,6 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 
+//authenticate
+
+var session = require('express-session');
+var passport = require('passport');
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
@@ -26,7 +31,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+//session
+app.use(session({
+  secret: 'mvkfooahjfenociddi',
+  resave: false,
+  saveUninitialized: false,
+ // cookie: { secure: true }
+}))
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/', index);
 app.use('/users', users);
 app.use('/register', index);
