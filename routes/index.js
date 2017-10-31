@@ -1,22 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var expressValidator = require('express-validator');
+var passport = require('passport');
 var bcrypt = require('bcrypt');
-var passport = require('passport')
 const saltRounds = 10;
+
+router.get('/', function(req,res){
+	console.log(req.user);
+	console.log(req.isAuthenticated());
+	console.log("test");
+	res.render('home', {title:'Home'});
+});
+
 /* GET home page. */
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Registration' });
 });
 
-router.get('/', function(req,res){
-	res.render('home', {title:'Home'});
-});
 
 router.get('/login', function(req, res, next) {
 	res.render('login', { title: 'Login' });
   });
-
 
 /* GET hregister page. */
 router.post('/register', function(req, res, next) {
@@ -32,17 +36,13 @@ router.post('/register', function(req, res, next) {
 	 console.log(req.body.username);
 	 console.log(req.body.email);
 	 console.log(req.body.password);
-
 	 if(errors){
 		 console.log(`errors: $(JSON.stringify(errors)}`);
-
 		 res.render('register', {
 			 title: 'Registration Error',
 			 errors: errors
 			});
-
 	 }else{
- 
 		const a = req.body.username;
 		const b = req.body.email;
 		const c = req.body.password;
@@ -57,15 +57,10 @@ router.post('/register', function(req, res, next) {
 					req.login(user_id, function(err){
 						res.redirect('/');
 					});
-				});
-				
+				});	
 			})
 		  });
-		
-
 	 }
-	
-	
 });
 
 passport.serializeUser(function(user_id, done) {	
@@ -79,4 +74,4 @@ passport.deserializeUser(function(user_id, done) {
 
 module.exports = router;
 
-//add unique username and email
+//add unique username and email to database
